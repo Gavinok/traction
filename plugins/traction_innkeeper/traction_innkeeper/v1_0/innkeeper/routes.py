@@ -550,12 +550,12 @@ async def tenant_wallet_create_token(request: web.BaseRequest):
     # Tenants must always be fetch by their wallet id.
     async with profile.session() as session:
         rec = await TenantRecord.query_by_wallet_id(session, wallet_id)
-        LOGGER.warn("when creating token ", rec)
+        LOGGER.debug("when creating token ", rec)
         if rec.state == TenantRecord.STATE_DELETED:
             raise web.HTTPUnauthorized(reason="Tenant is disabled")
 
     # The rest is from https://github.com/hyperledger/aries-acapy-plugins/blob/main/multitenant_provider/multitenant_provider/v1_0/routes.py
-    LOGGER.warn(f"wallet_id = {wallet_id}")
+    LOGGER.debug(f"wallet_id = {wallet_id}")
 
     # "builtin" wallet_create_token uses request.has_body / can_read_body
     # which do not always return true, so wallet_key wasn't getting set or passed
@@ -568,7 +568,6 @@ async def tenant_wallet_create_token(request: web.BaseRequest):
 
     body = await request.json()
     wallet_key = body.get("wallet_key")
-    LOGGER.warn(f"wallet_key = {wallet_key}")
 
     # If wallet_key is not there or blank return an error
     if not wallet_key:
