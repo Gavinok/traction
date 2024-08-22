@@ -1097,6 +1097,8 @@ async def register(app: web.Application):
             ),
         ]
     )
+    # Find the multitenant wallet token endpoint and over ride it with
+    # the new tenant_wallet_create_token function
     for r in app.router.routes():
         if r.method == "POST":
             if (
